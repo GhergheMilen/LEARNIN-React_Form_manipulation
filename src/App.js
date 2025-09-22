@@ -1,3 +1,5 @@
+import { hasFormSubmit } from "@testing-library/user-event/dist/utils";
+
 const initialItems = [
   { id: 1, description: "Passports", quantity: 2, packed: false },
   { id: 2, description: "Socks", quantity: 12, packed: false },
@@ -9,7 +11,7 @@ const initialItems = [
   { id: 8, description: "Toothpaste", quantity: 1, packed: true },
   { id: 9, description: "Toothbrush", quantity: 1, packed: true },
   { id: 10, description: "Jacket", quantity: 1, packed: true },
-  { id: 11, description: "Glasses", quantity: 1, packed: false },
+  { id: 11, description: "Sun Glasses", quantity: 1, packed: false },
 ];
 
 export default function App() {
@@ -26,13 +28,28 @@ export default function App() {
 function Logo() {
   return <h1>🌴 Far Away 💼</h1>;
 }
+
 function Form() {
+  function handeleSubmit(e) {
+    e.preventDefault();
+  }
+
   return (
-    <div className="add-form">
+    <form className="add-form" onSubmit={handeleSubmit}>
       <h3>What do you need for your trip</h3>
-    </div>
+      <select name="" id="">
+        {Array.from({ length: 20 }, (_, i) => i + 1).map((num) => (
+          <option value={num} key={num}>
+            {num}
+          </option>
+        ))}
+      </select>
+      <input type="text" placeholder="Item..." />
+      <button>Add</button>
+    </form>
   );
 }
+
 function PackingList() {
   return (
     <div className="list">
@@ -49,8 +66,7 @@ function Item({ item }) {
   return (
     <li>
       <span style={item.packed ? { textDecoration: "line-through" } : {}}>
-        {item.quantity}
-        {item.description}
+        {item.quantity} {} {item.description}
       </span>
       <button>❌</button>
     </li>
