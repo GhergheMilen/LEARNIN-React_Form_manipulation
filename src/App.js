@@ -1,4 +1,3 @@
-import { getSuggestedQuery } from "@testing-library/dom";
 import { useState } from "react";
 
 const initialItems = [
@@ -16,11 +15,15 @@ const initialItems = [
 ];
 
 export default function App() {
+  const [items, setItems] = useState([]);
+  function handleAddItems(item) {
+    setItems((items) => [...items, item]);
+  }
   return (
     <div className="app">
       <Logo />
-      <Form />
-      <PackingList />
+      <Form onAddItems={handleAddItems} />
+      <PackingList items={items} />
       <Stats />
     </div>
   );
@@ -29,12 +32,8 @@ export default function App() {
 function Logo() {
   return <h1>🌴 Far Away 💼</h1>;
 }
-//controled elements in forms. input and select mentain theyr state in the DOM
-//controlled elements technique
-//1. useState hook
-//2 use the hook as the value of the input field
-//3 use onChange on the input to listen for the changes
-function Form() {
+
+function Form({ onAddItems }) {
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState(1);
 
@@ -43,6 +42,8 @@ function Form() {
     if (!description) return;
 
     const newItem = { description, amount, packed: false, id: Date.now };
+
+    onAddItems(newItem);
 
     setDescription("");
     setAmount(1);
@@ -72,11 +73,11 @@ function Form() {
   );
 }
 
-function PackingList() {
+function PackingList({ items }) {
   return (
     <div className="list">
       <ul>
-        {initialItems.map((item) => (
+        {items.map((item) => (
           <Item item={item} key={item.id} />
         ))}
       </ul>
